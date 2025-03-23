@@ -1,3 +1,5 @@
+require('dotenv').config();
+console.log("🔑 Loaded API KEY:", process.env.GEMINI_API_KEY);
 const express = require('express');
 const cors = require('cors');
 const lyricsRoutes = require('./routes/lyrics.routes');
@@ -11,9 +13,9 @@ app.use(express.json());
 // Routes
 app.use('/api/lyrics', lyricsRoutes);
 
-// Global error handler
 app.use((err, req, res, next) => {
-  console.error('❌ Global Error:', err.stack);
+  console.error('❌ Global Error:', err.message);
+  console.error('Error stack:', err.stack);
   res.status(500).json({ error: 'Something went wrong on the server.' });
 });
 
