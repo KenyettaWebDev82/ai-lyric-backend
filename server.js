@@ -1,5 +1,4 @@
 require('dotenv').config();
-console.log("🔑 Loaded API KEY:", process.env.GEMINI_API_KEY);
 const express = require('express');
 const cors = require('cors');
 const lyricsRoutes = require('./routes/lyrics.routes');
