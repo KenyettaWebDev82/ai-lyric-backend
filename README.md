@@ -14,10 +14,19 @@ node server.js
 Or if you're using nodemon:
 nodemon server.js
 
+## 🌐 Live API URL
+
+The backend is deployed on Render. You can access the API at:
+
+**[https://ai-lyric-backend.onrender.com](https://ai-lyric-backend.onrender.com)**
+
+## 📡 API Endpoints
+
+
 🔥 API Endpoint
 🎵 POST /api/lyrics
 Generates lyrics based on the mood provided by the frontend.
-URL: http://localhost:3333/api/lyrics
+URL: https://ai-lyric-backend.onrender.com
 Method: POST
 Request Body:
 {
@@ -30,6 +39,15 @@ Success Response:
 Error Response:
 {
   "error": "Failed to generate lyrics. Please try again later."
+}
+
+🚀 TEST Usage
+You can test it using Postman or any API client:
+
+POST https://ai-lyric-backend.onrender.com/api/lyrics
+Body:
+{
+  "mood": "sad"
 }
 
 📂 Project Structure
