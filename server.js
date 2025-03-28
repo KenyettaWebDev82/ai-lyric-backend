@@ -5,8 +5,20 @@ const lyricsRoutes = require('./routes/lyrics.routes');
 
 const app = express();
 
+// Enable CORS for Netlify URL
+const allowedOrigins = [
+  "https://ailyricsgenerator.netlify.app", // ✅ Netlify URL
+  "http://localhost:3000", // ✅ Local development
+];
+
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: ["GET", "POST"],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // Routes
