@@ -1,6 +1,7 @@
 const express = require('express');
+const { handleMoodInput } = require('../controllers/lyrics_controller');
+
 const router = express.Router();
-const { handleMoodInput } = require('../controllers/lyrics.controller');
 
 router.post('/', handleMoodInput);
 
