@@ -4,116 +4,76 @@ require("dotenv").config();
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY}`;
 
-// Explicitly enhanced random prompt generator
-const generateDynamicPrompt = (mood, genre) => {
+const generateDynamicPrompt = (mood, genre, singingMode) => {
   const scenarios = {
-    "Hip Hop": [
-      "block party in Brooklyn",
-      "late night cypher battle",
-      "riding through ATL streets",
-      "dreams of mixtape success",
-    ],
-    "Country": [
-      "bonfire night in Tennessee",
-      "old truck breaking down",
-      "front porch memories",
-      "dancehall heartbreak story",
-    ],
-    "R&B": [
-      "slow dance in the rain",
-      "late night confession",
-      "old love letter found",
-      "quiet moment by candlelight",
-    ],
-    "Pop": [
-      "summer music festival",
-      "road trip anthem",
-      "first crush at a concert",
-      "dancing alone in my room",
-    ],
-    "Rock": [
-      "gritty garage band days",
-      "loud arena nights",
-      "leaving a small town behind",
-      "midnight highway drive",
-    ],
+    "Hip Hop": [ "block party in Brooklyn", "late night cypher battle", "riding through ATL streets", "dreams of mixtape success" ],
+    "Country": [ "bonfire night in Tennessee", "old truck breaking down", "front porch memories", "dancehall heartbreak story" ],
+    "R&B": [ "slow dance in the rain", "late night confession", "old love letter found", "quiet moment by candlelight" ],
+    "Pop": [ "summer music festival", "road trip anthem", "first crush at a concert", "dancing alone in my room" ],
+    "Rock": [ "gritty garage band days", "loud arena nights", "leaving a small town behind", "midnight highway drive" ],
   };
 
-  const scenario = scenarios[genre]?.[
-    Math.floor(Math.random() * scenarios[genre].length)
-  ] || "";
+  const scenario = scenarios[genre]?.[Math.floor(Math.random() * scenarios[genre].length)] || "";
 
-  return `
-  INTERNAL RULES FOR AI:
-  - No generic openings.
-  - No words from banned list.
-  - MUST start with a person doing something specific.
-  - FORCE diversity in each generation.
-  
-  BANNED WORDS: sunrise, dawn, golden, city gold, fire, ashes, phoenix, chains, wings, sky, burning, glow, rising from the ashes, heart on fire, shine bright.
-  
-  ROLE:
-  - Grammy-winning ${genre} songwriter.
-  - Mood: ${mood}
-  - Scenario: ${scenario}
-  
-  SONG STRUCTURE:
-  [Title: Creative, Slang-friendly, Genre-specific]
-  
-  [Verse 1]
-  OPEN with a *completely unexpected* visual.
-  Example: 
-  - "Lil Tay braiding hair on the corner"
-  - "Cups stacked high at Mama Jean's fish fry"
-  - "Uncle Lenny slamming dominoes at the park"
-  
-  Make Verse 1 feel hyper-local, true to ${genre}, and visual.
-  
-  [Chorus]
-  Catchy, repeatable, feels authentic.
-  
-  [Verse 2]
-  New detail or story twist.
-  
-  [Chorus]
-  
-  [Bridge]
-  Optional emotional moment or flip.
-  
-  [Chorus] Final repeat.
-  
-  [Outro]
-  Strong closing line that leaves impact.
-  
-  REQUIREMENTS:
-  - Real people doing real things.
-  - Slang and culture welcome.
-  - No poetic fluff.
-  - No repeated openings.
-  - Avoid all banned words.
-  
-FINAL REMINDER TO AI:
-→ If the first line of Verse 1 uses: sunrise, dawn, light, city, gold, fire, sky, ashes, or waking up → DELETE & REWRITE that line.
+  let prompt = ` 
+##########################################
+STRICT RULES FOR AI — DO NOT BREAK:
+##########################################
+🚫 BANNED WORDS:
+sunrise, dawn, golden, city gold, fire, ashes, phoenix, chains, wings, morning, concrete jungle, sky, burning, glow, rising from the ashes, heart on fire, shine bright.
 
-→ Verse 1 should start with:
-- A person doing something real
-- A setting with objects/slang
-- Genre-specific culture
+DELETE & REWRITE IF USED.
 
----
+##########################################
 
-Now, write the song.
+ROLE:
+Grammy-winning ${genre} songwriter
+Mood: ${mood}
+Scenario Inspiration: ${scenario}
 
-Make it sound like a Grammy-winning songwriter wrote this for a ${genre} artist in a ${mood} mood.
+##########################################
+SONG STRUCTURE:
+[Title]
+[Verse 1] → MUST start with a real action, object, or slang.
 
-No generic lines. No fluff. No poetry filler.
-`;  
-  
+[Chorus]
+Catchy, memorable hook.
+
+[Verse 2]
+New detail only.
+
+[Chorus]
+[Bridge] (optional twist)
+[Chorus] Final
+[Outro] Closing line.
+`;
+
+  if (singingMode) {
+    prompt += `
+##########################################
+SINGING MODE ENABLED:
+##########################################
+- Keep lines shorter
+- Rhythm friendly
+- Space for melody
+- Repetition welcome
+Example:
+"Pull up slow / Bass real low"
+`;
+  }
+
+  prompt += `
+##########################################
+READY? WRITE THE SONG NOW.
+##########################################
+`;
+
+  return prompt;
 };
 
-const generateLyricsFromMood = async (mood, genre) => {
+const generateLyricsFromMood = async (mood, genre, singingMode = false) => {  // <-- Pass singingMode
   try {
-    const prompt = generateDynamicPrompt(mood, genre);
+    const prompt = generateDynamicPrompt(mood, genre, singingMode);
 
     const body = {
       contents: [
@@ -137,6 +97,5 @@ const generateLyricsFromMood = async (mood, genre) => {
     throw error;
   }
 };
-
 
 module.exports = { generateLyricsFromMood };
