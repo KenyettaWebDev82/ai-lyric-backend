@@ -11,8 +11,8 @@ const router = express.Router();
 
 router.post('/', handleMoodInput)
 router.post('/save', saveLyrics)
-router.get('/user/:user_id', getLyrics)
-router.get('/user/:user_id/title/:title', getOneLyricByName)
-router.delete('/:id', deleteLyrics)
+router.get('/user/:firebase_uid', getLyrics); // ← REPLACE THIS
+router.get('/user/:firebase_uid/title/:title', getOneLyricByName);
+router.delete('/:id', deleteLyrics);
 
 module.exports = router
