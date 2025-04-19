@@ -1,86 +1,123 @@
 🚀 Getting Started
-
 📥 1. Clone the Repository
 git clone https://github.com/PursuitMadeMe/ai-lyric-backend.git
 cd ai-lyric-backend
 
+
 📦 2. Install Dependencies
-Run the following command to install required packages:
 npm install
 
+
 ⚡️ 3. Run the Backend Server
-Start the backend on port 3333:
+# With Node
 node server.js
-Or if you're using nodemon:
+
+# OR with nodemon (if installed globally)
 nodemon server.js
 
-## 🌐 Live API URL
 
-The backend is deployed on Render. You can access the API at:
-
-**[https://ai-lyric-backend.onrender.com](https://ai-lyric-backend.onrender.com)**
-
-## 📡 API Endpoints
+🌐 Live API URL
+The backend is deployed on Render:
+➡️ https://ai-lyric-backend.onrender.com
 
 
-🔥 API Endpoint
+📡 API Endpoints
 🎵 POST /api/lyrics
-Generates lyrics based on the mood provided by the frontend.
-URL: https://ai-lyric-backend.onrender.com
-Method: POST
+Generate lyrics using mood, genre, and singingMode.
 Request Body:
 {
-  "mood": "dreamy" | "romantic" | "melancholy" | "joyful" | "empowered"
+  "mood": "joyful",
+  "genre": "Hip Hop",
+  "singingMode": true
 }
+
 Success Response:
 {
-  "lyrics": "Generated lyrics based on the selected mood."
+  "lyrics": "Generated lyrics based on mood and genre."
 }
-Error Response:
+
+
+💾 POST /api/lyrics/save
+Save a generated lyric for the logged-in Firebase user.
 {
-  "error": "Failed to generate lyrics. Please try again later."
+  "firebase_uid": "user_firebase_uid",
+  "title": "Nova Anthem",
+  "content": "Here are the lyrics...",
+  "mood": "empowered",
+  "genre": "Pop"
 }
 
-🚀 TEST Usage
-You can test it using Postman or any API client:
 
-POST https://ai-lyric-backend.onrender.com/api/lyrics
-Body:
-{
-  "mood": "sad"
-}
+📂 GET /api/lyrics/user/:firebase_uid
+Fetch all saved lyrics for a user.
 
-📂 Project Structure
+
+🔍 GET /api/lyrics/user/:firebase_uid/title/:title
+Get one specific lyric by title and user.
+
+
+🗑 DELETE /api/lyrics/:id
+Delete a specific lyric by ID.
+
+
+🛠 Project Structure
 /ai-lyric-backend
-├── /node_modules
-├── /public
-│   └── vibe2.webp
-├── /routes
-│   └── lyrics.js        # Handles mood-based lyric generation
-├── server.js            # Main entry point for the backend
-└── package.json
+├── controllers/
+│   └── lyrics_controller.js     # Main lyric logic
+│   └── users_controller.js      # User DB access
+├── routes/
+│   └── lyrics.routes.js
+│   └── users.routes.js
+├── services/
+│   └── gemini.services.js       # Google AI integration
+├── db.js                        # PostgreSQL pool config
+├── server.js                    # Main Express server
+├── .env                         # Env variables
+├── package.json                 # Dependencies
+
 
 📝 .env Configuration
-To configure environment variables, create a .env file in the root folder and add the following:
+Create a .env file:
 PORT=3333
+DATABASE_URL=your_postgres_connection_string
+GEMINI_API_KEY=your_google_gemini_key
 
-🛠️ API Integration (Optional)
-If you plan to integrate a 3rd-party AI API, update the /routes/lyrics.js file with your desired API key and endpoint.
+
+🧪 Test It with Postman
+POST https://ai-lyric-backend.onrender.com/api/lyrics
+Content-Type: application/json
+{
+  "mood": "sad",
+  "genre": "R&B",
+  "singingMode": false
+}
+
+
+🔐 Firebase Auth Integration
+All saved lyrics are tied to a secure firebase_uid. Ensure frontend login happens via Firebase before saving or retrieving lyrics.
+
 
 🚨 Error Handling
-Invalid or missing mood will return an error message.
-Network errors or API issues will trigger a fallback message.
+Missing or invalid fields return a 400 error.
+Invalid firebase_uid returns 404.
+Database or API errors return 500 server errors.
+
 
 💡 Future Enhancements
-🎤 Add more moods and lyric styles.
-🎵 Improve API error handling.
-🔒 Add input validation.
+🎤 Add more moods and genre-specific lyrical styles.
+🔎 Add search + filter for saved lyrics.
+✍️ Enable lyric editing.
+🔐 Add advanced Firebase claims & role-based permissions.
 
-📣 Contributors
-👩‍💻 Kenyetta Griffin - GitHub
+
+👩‍💻 Author
+Kenyetta Griffin
+
 
 📄 License
-This project is licensed under the MIT License.
+Licensed under the MIT License.
+
 
 🎉 Done!
-You’re now ready to run the backend for Nova’s AI Lyric Generator! 🎧✨
+You're now ready to run and deploy the backend for Nova's AI Lyric Generator!
+✨ Let the lyrics flow ✨
