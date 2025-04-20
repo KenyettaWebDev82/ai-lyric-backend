@@ -22,23 +22,27 @@ exports.saveLyrics = async (req, res, next) => {
   try {
     const { firebase_uid, title, content, mood, genre } = req.body;
 
+    console.log("📝 Incoming SAVE request:", req.body); // ✅ log request
+
     if (!firebase_uid || !title || !content || !mood || !genre) {
+      console.warn("⚠️ Missing required fields in saveLyrics");
       return res.status(400).json({ error: "All fields are required." });
     }
 
-    // Get user ID from firebase_uid
     const userResult = await db.query(
       "SELECT id FROM users WHERE firebase_uid = $1",
       [firebase_uid]
     );
 
+    console.log("🧑 User lookup result:", userResult.rows); // ✅ log user lookup
+
     if (userResult.rows.length === 0) {
+      console.warn("⚠️ User not found in saveLyrics");
       return res.status(404).json({ error: "User not found." });
     }
 
     const user_id = userResult.rows[0].id;
 
-    // Save lyric
     const result = await db.query(
       `INSERT INTO lyrics (user_id, title, content, mood, genre)
        VALUES ($1, $2, $3, $4, $5)
@@ -46,11 +50,15 @@ exports.saveLyrics = async (req, res, next) => {
       [user_id, title, content, mood, genre]
     );
 
+    console.log("✅ Lyric saved:", result.rows[0]); // ✅ log saved result
+
     res.status(201).json(result.rows[0]);
   } catch (error) {
-    next(error);
+    console.error("❌ saveLyrics error:", error); // ✅ catch and log full error
+    res.status(500).json({ error: "Something went wrong on the server." });
   }
 };
+
 
 // GET /api/lyrics/:firebase_uid — Get All Lyrics for User
 exports.getLyrics = async (req, res, next) => {
