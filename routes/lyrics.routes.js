@@ -9,10 +9,11 @@ const {
 
 const router = express.Router();
 
+router.get('/user/:firebase_uid/title/:title', getOneLyricByName);
+router.get('/user/:firebase_uid', getLyrics); // ← REPLACE THIS
+
 router.post('/', handleMoodInput)
 router.post('/save', saveLyrics)
-router.get('/user/:firebase_uid', getLyrics); // ← REPLACE THIS
-router.get('/user/:firebase_uid/title/:title', getOneLyricByName);
 router.delete('/:id', deleteLyrics);
 
 module.exports = router
