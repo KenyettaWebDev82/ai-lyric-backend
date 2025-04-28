@@ -1,5 +1,5 @@
 const { generateLyricsFromMood } = require("../services/gemini.services");
-const db = require("../db");
+const db = require("../services/db");
 
 // POST /api/lyrics/generate — AI Lyrics Generator
 exports.handleMoodInput = async (req, res, next) => {
