@@ -38,7 +38,7 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 3333;
 app.listen(PORT, '0.0.0.0', () => {
   console.log("🔑 DATABASE_URL:", process.env.DATABASE_URL);
-  console.log(`🚀 Server is running at http://localhost:${PORT}`);
+  console.log(`🚀 Server is running on port ${PORT}`);
 });
 
 
