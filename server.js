@@ -29,10 +29,6 @@ app.use(express.json());
 app.use('/api/lyrics', lyricsRoutes);
 app.use('/api/users', userRoutes)
 
-// Health check route 
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'OK', message: 'Nova AI Lyrics Generator is Running' });
-});
 
 
 app.use((err, req, res, next) => {
@@ -40,6 +36,10 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Something went wrong on the server.' });
 });
 
+// Health check route 
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'OK', message: 'Nova AI Lyrics Generator is Running' });
+});
 const PORT = process.env.PORT || 3333;
 app.listen(PORT, '0.0.0.0', () => {
   console.log("🔑 DATABASE_URL:", process.env.DATABASE_URL);
