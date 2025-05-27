@@ -29,6 +29,11 @@ app.use(express.json());
 app.use('/api/lyrics', lyricsRoutes);
 app.use('/api/users', userRoutes)
 
+// Health check route 
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'OK', message: 'Nova AI Lyrics Generator is Running' });
+});
+
 
 app.use((err, req, res, next) => {
   console.error(' Global Error:', err.message);
@@ -40,5 +45,4 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log("🔑 DATABASE_URL:", process.env.DATABASE_URL);
   console.log(`🚀 Server is running on port ${PORT}`);
 });
-
 
