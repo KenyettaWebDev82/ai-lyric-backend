@@ -20,29 +20,35 @@ exports.handleMoodInput = async (req, res, next) => {
 // POST /api/lyrics — Save Lyric
 exports.saveLyrics = async (req, res, next) => {
   try {
-    const { firebase_uid, title, content, mood, genre } = req.body;
+    const { firebase_uid, title, content, mood, genre, email } = req.body;
 
-    console.log("📝 Incoming SAVE request:", req.body); // ✅ log request
+    console.log("Incoming SAVE request:", req.body);
 
     if (!firebase_uid || !title || !content || !mood || !genre) {
-      console.warn("⚠️ Missing required fields in saveLyrics");
       return res.status(400).json({ error: "All fields are required." });
     }
 
-    const userResult = await db.query(
+    // Check if user exists
+    let userResult = await db.query(
       "SELECT id FROM users WHERE firebase_uid = $1",
       [firebase_uid]
     );
 
-    console.log("🧑 User lookup result:", userResult.rows); // ✅ log user lookup
-
+    // If user does NOT exist, create one
     if (userResult.rows.length === 0) {
-      console.warn("⚠️ User not found in saveLyrics");
-      return res.status(404).json({ error: "User not found." });
+      console.log("User not found, creating new user...");
+      // Optional: You can require email from client or pass null
+      const insertUserResult = await db.query(
+        "INSERT INTO users (firebase_uid, email) VALUES ($1, $2) RETURNING id",
+        [firebase_uid, email || null]
+      );
+      userResult = insertUserResult;
+      console.log("New user created with id:", userResult.rows[0].id);
     }
 
     const user_id = userResult.rows[0].id;
 
+    // Insert lyrics
     const result = await db.query(
       `INSERT INTO lyrics (user_id, title, content, mood, genre)
        VALUES ($1, $2, $3, $4, $5)
@@ -50,15 +56,14 @@ exports.saveLyrics = async (req, res, next) => {
       [user_id, title, content, mood, genre]
     );
 
-    console.log("✅ Lyric saved:", result.rows[0]); // ✅ log saved result
+    console.log("Lyric saved:", result.rows[0]);
 
     res.status(201).json(result.rows[0]);
   } catch (error) {
-    console.error("❌ saveLyrics error:", error); // ✅ catch and log full error
+    console.error("saveLyrics error:", error);
     res.status(500).json({ error: "Something went wrong on the server." });
   }
 };
-
 
 // GET /api/lyrics/:firebase_uid — Get All Lyrics for User
 exports.getLyrics = async (req, res, next) => {
