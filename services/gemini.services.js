@@ -71,7 +71,7 @@ READY? WRITE THE SONG NOW.
   return prompt;
 };
 
-const generateLyricsFromMood = async (mood, genre, singingMode = false) => {  // <-- Pass singingMode
+const generateLyricsFromMood = async (mood, genre, singingMode = false) => {  
   try {
     const prompt = generateDynamicPrompt(mood, genre, singingMode);
 
